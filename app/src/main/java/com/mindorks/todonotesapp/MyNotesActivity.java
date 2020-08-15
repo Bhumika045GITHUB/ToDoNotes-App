@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mindorks.todonotesapp.adapter.NotesAdapter;
@@ -22,6 +24,8 @@ import com.mindorks.todonotesapp.model.Notes;
 
 import java.util.ArrayList;
 
+import static com.mindorks.todonotesapp.AppConstant.DESCRIPTION;
+import static com.mindorks.todonotesapp.AppConstant.TITLE;
 
 public class MyNotesActivity extends AppCompatActivity {
 
@@ -71,26 +75,31 @@ public class MyNotesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String title = editTextTitle.getText().toString();
                 String description = editTextDescription.getText().toString();
-                Notes notes = new Notes();
-                notes.setTitle(title);
-                notes.setDescription(description);
-                notesList.add(notes);
+                if(!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)) {
+
+                    Notes notes = new Notes();
+                    notes.setTitle(title);
+                    notes.setDescription(description);
+                } else {
+                    Toast.makeText(MyNotesActivity.this,"Title or Description can't be emtpy", Toast.LENGTH_SHORT).show();
+                }
                 setupRecyclerView();
                 dialog.hide();
-//                rcv recylerview -> ADAPTER -> LIST
             }
         });
         dialog.show();
-
     }
 
     private void setupRecyclerView() {
 
-//        interface concept
+//        interface
         ItemClickListener itemClickListener = new ItemClickListener() {
             @Override
-            public void onClick() {
-
+            public void onClick(Notes notes) {
+            Intent intent = new Intent(MyNotesActivity.this, DetailActivity.class);
+            intent.putExtra(TITLE,notes.getTitle());
+            intent.putExtra(DESCRIPTION,notes.getDescription());
+            startActivity(intent);
             }
         };
 
