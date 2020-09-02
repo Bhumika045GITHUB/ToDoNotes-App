@@ -1,7 +1,6 @@
 package com.mindorks.todonotesapp
 
 import android.app.ProgressDialog.show
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -52,7 +51,7 @@ public class MyNotesActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(this)
                 .setView(view)
                 .setCancelable(false)
-                .create()
+                .Create()
         buttonSubmit.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 val title = editTextTitle.text.toString()
@@ -63,10 +62,12 @@ public class MyNotesActivity : AppCompatActivity() {
                 }
                 else {
                     Toast.makeText(this@MyNotesActivity, "Title or Decription cannot be empty", Toast.LENGTH_SHORT).show()
+
                 }
                 setupRecyclerView()
                 dialog.hide()
             }
+
         })
             dialog.show()
 
@@ -89,11 +90,14 @@ public class MyNotesActivity : AppCompatActivity() {
             recyclerView.adapter = notesAdapter
 
     }
+
     private fun getIntentData() {
         val intent = intent
-           fullName = intent.getStringExtra(AppConstant.FULL_NAME).toString()
-            if(fullName.isEmpty()) {
-                fullName = sharedPreferences.getString(PrefConstant.FULL_NAME, "").toString()
+        if(intent.hasExtra(AppConstant.FULL_NAME)) {
+            fullName = intent.getStringExtra(AppConstant.FULL_NAME).toString()
+        }
+        if(fullName.isEmpty()) {
+            fullName = sharedPreferences.getString(PrefConstant.FULL_NAME, "").toString()
         }
     }
 
@@ -108,5 +112,14 @@ public class MyNotesActivity : AppCompatActivity() {
     }
 }
 
+private fun Any.show() {
+
+}
+
+private fun Any.hide() {
+
+}
+
 private fun AlertDialog.Builder.Create() {
+
 }

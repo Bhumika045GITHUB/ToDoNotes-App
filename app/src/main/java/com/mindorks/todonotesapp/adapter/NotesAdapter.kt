@@ -29,8 +29,6 @@ class NotesAdapter(val list:List<Notes>, val itemClickListener: ItemClickListene
         })
     }
 
-
-
     override fun getItemCount(): Int {
         return list.size
     }
@@ -39,6 +37,4 @@ class NotesAdapter(val list:List<Notes>, val itemClickListener: ItemClickListene
         val textViewTitle : TextView = itemView.findViewById(R.id.textViewTitle)
         val textViewDescription : TextView = itemView.findViewById(R.id.textViewDescription)
     }
-
 }
-

@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
     private fun bindViews() {
         editTextFullName = findViewById(R.id.editTextFullName)
         editTextUserName = findViewById(R.id.editTextUserName)
-        buttonLogin = findViewById(R.id.ButtonLogin)
+        buttonLogin = findViewById(R.id.buttonLogin)
         val clickAction = object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 val fullName = editTextFullName.text.toString()
