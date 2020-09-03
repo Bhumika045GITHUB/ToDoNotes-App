@@ -16,9 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mindorks.todonotesapp.AppConstant.FULL_NAME
+import com.mindorks.todonotesapp.R
 import com.mindorks.todonotesapp.adapter.NotesAdapter
 import com.mindorks.todonotesapp.clicklisteners.ItemClickListener
 import com.mindorks.todonotesapp.model.Notes
+import com.mindorks.todonotesapp.utils.AppConstant
+import com.mindorks.todonotesapp.utils.PrefConstant
 
 public class MyNotesActivity : AppCompatActivity() {
     lateinit var fullName: String

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.mindorks.todonotesapp.R
+import com.mindorks.todonotesapp.utils.PrefConstant
 
 class SplashActivity : AppCompatActivity() {
 

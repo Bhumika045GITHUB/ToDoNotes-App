@@ -8,6 +8,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.mindorks.todonotesapp.R
+import com.mindorks.todonotesapp.utils.AppConstant
+import com.mindorks.todonotesapp.utils.PrefConstant
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
