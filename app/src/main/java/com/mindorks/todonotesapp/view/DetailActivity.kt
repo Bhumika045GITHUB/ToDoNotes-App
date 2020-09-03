@@ -1,8 +1,10 @@
-package com.mindorks.todonotesapp
+package com.mindorks.todonotesapp.view
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.mindorks.todonotesapp.R
+import com.mindorks.todonotesapp.utils.AppConstant
 
 class DetailActivity : AppCompatActivity(){
 

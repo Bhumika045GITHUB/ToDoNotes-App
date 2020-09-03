@@ -1,4 +1,4 @@
-package com.mindorks.todonotesapp
+package com.mindorks.todonotesapp.utils
 
 object AppConstant {
     @JvmField

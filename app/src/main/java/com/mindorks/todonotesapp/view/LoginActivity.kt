@@ -1,4 +1,4 @@
-package com.mindorks.todonotesapp
+package com.mindorks.todonotesapp.view
 
 import android.content.Intent
 import android.content.SharedPreferences

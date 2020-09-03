@@ -1,4 +1,4 @@
-package com.mindorks.todonotesapp
+package com.mindorks.todonotesapp.view
 
 import android.app.ProgressDialog.show
 import android.content.Intent
@@ -51,7 +51,7 @@ public class MyNotesActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(this)
                 .setView(view)
                 .setCancelable(false)
-                .Create()
+                .create()
         buttonSubmit.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 val title = editTextTitle.text.toString()
@@ -62,15 +62,12 @@ public class MyNotesActivity : AppCompatActivity() {
                 }
                 else {
                     Toast.makeText(this@MyNotesActivity, "Title or Decription cannot be empty", Toast.LENGTH_SHORT).show()
-
                 }
                 setupRecyclerView()
                 dialog.hide()
             }
-
         })
             dialog.show()
-
     }
 
     private fun setupRecyclerView() {
@@ -96,7 +93,7 @@ public class MyNotesActivity : AppCompatActivity() {
         if(intent.hasExtra(AppConstant.FULL_NAME)) {
             fullName = intent.getStringExtra(AppConstant.FULL_NAME).toString()
         }
-        if(fullName.isEmpty()) {
+        if(!this::fullName.isInitialized) {
             fullName = sharedPreferences.getString(PrefConstant.FULL_NAME, "").toString()
         }
     }
