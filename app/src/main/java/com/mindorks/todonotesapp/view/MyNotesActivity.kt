@@ -15,11 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mindorks.todonotesapp.AppConstant.FULL_NAME
+import com.mindorks.todonotesapp.NotesApp
+//import com.mindorks.todonotesapp.AppConstant.FULL_NAME
 import com.mindorks.todonotesapp.R
 import com.mindorks.todonotesapp.adapter.NotesAdapter
 import com.mindorks.todonotesapp.clicklisteners.ItemClickListener
-import com.mindorks.todonotesapp.model.Notes
+import com.mindorks.todonotesapp.db.Notes
 import com.mindorks.todonotesapp.utils.AppConstant
 import com.mindorks.todonotesapp.utils.PrefConstant
 
@@ -36,6 +37,9 @@ public class MyNotesActivity : AppCompatActivity() {
         bindViews()
         setupSharedPreferences()
         getIntentData()
+        getDatafromDatabase()
+        setupRecyclerView()
+
         supportActionBar?.title = fullName
         fabAddNotes.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
@@ -44,6 +48,12 @@ public class MyNotesActivity : AppCompatActivity() {
 
         }
         )
+    }
+
+    private fun getDatafromDatabase() {
+        val notesApp = applicationContext as NotesApp
+        val notesDao = notesApp.getsNotesDb().notesDao()
+        notesList.addAll(notesDao.getAll())
     }
 
     private fun setupDialogbBox() {
@@ -55,13 +65,14 @@ public class MyNotesActivity : AppCompatActivity() {
                 .setView(view)
                 .setCancelable(false)
                 .create()
-        buttonSubmit.setOnClickListener(object : View.OnClickListener{
+       buttonSubmit.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 val title = editTextTitle.text.toString()
                 val description = editTextDescription.text.toString()
                 if(title.isNotEmpty() && description.isNotEmpty()) {
-                    val notes = Notes(title, description)
+                    val notes = Notes(title = title, description = description)
                     notesList.add(notes)
+                    addNotesToDo(notes)
                 }
                 else {
                     Toast.makeText(this@MyNotesActivity, "Title or Decription cannot be empty", Toast.LENGTH_SHORT).show()
@@ -73,6 +84,14 @@ public class MyNotesActivity : AppCompatActivity() {
             dialog.show()
     }
 
+    private fun addNotesToDo(notes: Notes) {
+        // insert notes in DB
+        val notesApp = applicationContext as NotesApp
+        val notesDao = notesApp.getsNotesDb().notesDao()
+        notesDao.insert(notes)
+
+    }
+
     private fun setupRecyclerView() {
             val itemClickListener = object  : ItemClickListener {
                 override fun onClick(notes: Notes) {
@@ -80,6 +99,13 @@ public class MyNotesActivity : AppCompatActivity() {
                     intent.putExtra(AppConstant.TITLE, notes.title)
                     intent.putExtra(AppConstant.DESCRIPTION, notes.description)
                     startActivity(intent)
+                }
+
+                override fun onUpdate(notes: Notes) {
+//                    update the values
+                    val notesApp = applicationContext as NotesApp
+                    val notesDao = notesApp.getsNotesDb().notesDao()
+                    notesDao.updateNotes(notes)
                 }
 
             }
