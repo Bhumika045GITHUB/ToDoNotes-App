@@ -12,7 +12,7 @@ interface NotesDao {
     fun getAll(): List<Notes>
 
     @Insert(onConflict = REPLACE )
-    fun insert(notes : Notes)
+    fun insert(notes: Notes)
 
     @Update
     fun updateNotes(notes : Notes)

@@ -37,12 +37,13 @@ class NotesAdapter(val list:List<Notes>, val itemClickListener: ItemClickListene
             }
         })
     }
+
     override fun getItemCount(): Int {
         return list.size
     }
     inner class ViewHolder(ItemView: View): RecyclerView.ViewHolder(ItemView) {
         val textViewTitle : TextView = itemView.findViewById(R.id.textViewTitle)
         val textViewDescription : TextView = itemView.findViewById(R.id.textViewDescription)
-        val checkBoxMarkStatus : CheckBox = itemView.findViewById(R.id.checkboxMarkStatus)
+        val checkBoxMarkStatus : CheckBox = itemView.findViewById(R.id.containerMarkStatus)
     }
 }

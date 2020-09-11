@@ -1,15 +1,11 @@
 package com.mindorks.todonotesapp.view
 
-import android.app.ProgressDialog.show
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Insets.add
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.provider.ContactsContract
 import android.view.View
-import android.widget.AbsListView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +19,7 @@ import com.mindorks.todonotesapp.clicklisteners.ItemClickListener
 import com.mindorks.todonotesapp.db.Notes
 import com.mindorks.todonotesapp.utils.AppConstant
 import com.mindorks.todonotesapp.utils.PrefConstant
+import kotlinx.android.synthetic.main.activity_my_notes.*
 
 public class MyNotesActivity : AppCompatActivity() {
     lateinit var fullName: String
@@ -31,6 +28,7 @@ public class MyNotesActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     lateinit var recyclerView: RecyclerView
     var notesList = ArrayList<Notes>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_notes)
@@ -39,15 +37,18 @@ public class MyNotesActivity : AppCompatActivity() {
         getIntentData()
         getDatafromDatabase()
         setupRecyclerView()
+        clickListeners()
+    }
+//        supportActionBar?.title = fullName
 
+    private fun clickListeners() {
         supportActionBar?.title = fullName
         fabAddNotes.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(p0: View?) {
-                setupDialogbBox()
+            override fun onClick(v : View?) {
+               val intent = Intent(this@MyNotesActivity, AddNotesActivity:: class.java)
+                startActivityForResult(intent, Companion.ADD_NOTES_CODE)
             }
-
-        }
-        )
+        })
     }
 
     private fun getDatafromDatabase() {
@@ -56,67 +57,46 @@ public class MyNotesActivity : AppCompatActivity() {
         notesList.addAll(notesDao.getAll())
     }
 
-    private fun setupDialogbBox() {
-        val view = LayoutInflater.from(this@MyNotesActivity).inflate(R.layout.add_notes_dialog_layout, null)
-        val editTextTitle = view.findViewById<EditText>(R.id.editTextTitle)
-        val editTextDescription = view.findViewById<EditText>(R.id.editTextDescription)
-        val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
-        val dialog = AlertDialog.Builder(this)
-                .setView(view)
-                .setCancelable(false)
-                .create()
-       buttonSubmit.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(p0: View?) {
-                val title = editTextTitle.text.toString()
-                val description = editTextDescription.text.toString()
-                if(title.isNotEmpty() && description.isNotEmpty()) {
-                    val notes = Notes(title = title, description = description)
-                    notesList.add(notes)
-                    addNotesToDo(notes)
-                }
-                else {
-                    Toast.makeText(this@MyNotesActivity, "Title or Decription cannot be empty", Toast.LENGTH_SHORT).show()
-                }
-                setupRecyclerView()
-                dialog.hide()
-            }
-        })
-            dialog.show()
-    }
-
     private fun addNotesToDo(notes: Notes) {
         // insert notes in DB
         val notesApp = applicationContext as NotesApp
         val notesDao = notesApp.getsNotesDb().notesDao()
         notesDao.insert(notes)
-
     }
-
     private fun setupRecyclerView() {
-            val itemClickListener = object  : ItemClickListener {
-                override fun onClick(notes: Notes) {
-                    val intent = Intent(this@MyNotesActivity, DetailActivity::class.java)
-                    intent.putExtra(AppConstant.TITLE, notes.title)
-                    intent.putExtra(AppConstant.DESCRIPTION, notes.description)
-                    startActivity(intent)
-                }
-
-                override fun onUpdate(notes: Notes) {
-//                    update the values
-                    val notesApp = applicationContext as NotesApp
-                    val notesDao = notesApp.getsNotesDb().notesDao()
-                    notesDao.updateNotes(notes)
-                }
-
+        val itemClickListener = object : ItemClickListener {
+            override fun onClick(notes: Notes) {
+                val intent = Intent(this@MyNotesActivity, DetailActivity::class.java)
+                intent.putExtra(AppConstant.TITLE, notes.title)
+                val putExtra = intent.putExtra(AppConstant.DESCRIPTION, notes.description)
+                startActivity(intent)
             }
-            val notesAdapter = NotesAdapter(notesList, itemClickListener )
-            val LinearLayoutManager = LinearLayoutManager(this@MyNotesActivity)
-            LinearLayoutManager.orientation = RecyclerView.VERTICAL
-            recyclerView.layoutManager = LinearLayoutManager
-            recyclerView.adapter = notesAdapter
-
+            override fun onUpdate(notes: Notes) {
+//                    update the values
+                val notesApp = applicationContext as NotesApp
+                val notesDao = notesApp.getsNotesDb().notesDao()
+                notesDao.updateNotes(notes)
+            }
+        }
+        val notesAdapter = NotesAdapter(notesList, itemClickListener)
+        val LinearLayoutManager = LinearLayoutManager(this@MyNotesActivity)
+        LinearLayoutManager.orientation = RecyclerView.VERTICAL
+        recyclerView.layoutManager = LinearLayoutManager
+        recyclerView.adapter = notesAdapter
     }
-
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
+            if (resultCode == ADD_NOTES_CODE) {
+                val title = data?.getStringExtra(AppConstant.TITLE)
+                val description = data?.getStringExtra(AppConstant.DESCRIPTION)
+                val notesApp = applicationContext as NotesApp
+                val notesDao = notesApp.getsNotesDb().notesDao()
+                val notes = Notes(title = title!!, description = description!!)
+                notesList.add(notes)
+                notesDao.insert(notes)
+                recyclerViewNotes.adapter?.notifyItemChanged(notesList.size-1)
+            }
+        }
     private fun getIntentData() {
         val intent = intent
         if(intent.hasExtra(AppConstant.FULL_NAME)) {
@@ -135,6 +115,10 @@ public class MyNotesActivity : AppCompatActivity() {
         fabAddNotes = findViewById(R.id.fabAddNotes)
         recyclerView = findViewById(R.id.recyclerViewNotes)
 
+    }
+
+    companion object {
+        const val ADD_NOTES_CODE = 100
     }
 }
 
