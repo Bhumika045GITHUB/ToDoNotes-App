@@ -1,5 +1,6 @@
 package com.mindorks.todonotesapp.view
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Insets.add
@@ -86,7 +87,7 @@ public class MyNotesActivity : AppCompatActivity() {
     }
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)
-            if (resultCode == ADD_NOTES_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
                 val title = data?.getStringExtra(AppConstant.TITLE)
                 val description = data?.getStringExtra(AppConstant.DESCRIPTION)
                 val notesApp = applicationContext as NotesApp
