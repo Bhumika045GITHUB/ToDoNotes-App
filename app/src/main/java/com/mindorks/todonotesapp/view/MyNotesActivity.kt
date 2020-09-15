@@ -90,9 +90,11 @@ public class MyNotesActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val title = data?.getStringExtra(AppConstant.TITLE)
                 val description = data?.getStringExtra(AppConstant.DESCRIPTION)
+                val imagePath = data?.getStringExtra(AppConstant.IMAGE_PATH)
+
                 val notesApp = applicationContext as NotesApp
                 val notesDao = notesApp.getsNotesDb().notesDao()
-                val notes = Notes(title = title!!, description = description!!)
+                val notes = Notes(title = title!!, description = description!!, imagePath = imagePath!!)
                 notesList.add(notes)
                 notesDao.insert(notes)
                 recyclerViewNotes.adapter?.notifyItemChanged(notesList.size-1)

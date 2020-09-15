@@ -17,11 +17,10 @@
         <provider
             android:grantUriPermissions="true"
             android:authorities="${applicationId}.provider"
-            android:name="androidx.core.content.FileProvider"/>
+            android:name="androidx.core.content.FileProvider">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
-<!--        </provider>-->
-    
+        </provider>
         <activity android:name=".view.AddNotesActivity"/>
         <activity android:name=".view.SplashActivity">
         <intent-filter>
