@@ -1,16 +1,23 @@
 package com.mindorks.todonotesapp.view
 
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Insets.add
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mindorks.todonotesapp.NotesApp
 //import com.mindorks.todonotesapp.AppConstant.FULL_NAME
@@ -20,7 +27,9 @@ import com.mindorks.todonotesapp.clicklisteners.ItemClickListener
 import com.mindorks.todonotesapp.db.Notes
 import com.mindorks.todonotesapp.utils.AppConstant
 import com.mindorks.todonotesapp.utils.PrefConstant
+import com.mindorks.todonotesapp.workmanager.MyWorker
 import kotlinx.android.synthetic.main.activity_my_notes.*
+import java.util.concurrent.TimeUnit
 
 public class MyNotesActivity : AppCompatActivity() {
     lateinit var fullName: String
@@ -39,6 +48,17 @@ public class MyNotesActivity : AppCompatActivity() {
         getDatafromDatabase()
         setupRecyclerView()
         clickListeners()
+        setupWorkManager()
+    }
+
+    private fun setupWorkManager() {
+        val constraint = Constraints.Builder()
+                .build()
+        val request = PeriodicWorkRequest
+                .Builder(MyWorker::class.java, 1, TimeUnit.MINUTES)
+                .setConstraints(constraint)
+                .build()
+        WorkManager.getInstance().enqueue(request)
     }
 //        supportActionBar?.title = fullName
 
@@ -123,9 +143,25 @@ public class MyNotesActivity : AppCompatActivity() {
     companion object {
         const val ADD_NOTES_CODE = 100
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item?.itemId == R.id.blog) {
+            Log.d(TAG, "Click Successful")
+            val intent = Intent(this@MyNotesActivity, BlogActivity::class.java)
+            startActivity(intent)
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
 
 private fun Any.show() {
+
 
 }
 

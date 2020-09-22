@@ -160,7 +160,7 @@ class AddNotesActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK) {
-            when(resultCode) {
+            when(requestCode) {
                 REQUEST_CODE_CAMERA->{
                     picturePath = imageLocation.path.toString()
                     Glide.with(this).load(imageLocation.absoluteFile).into(imageViewAdd)
