@@ -9,15 +9,11 @@ class FragmentAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdap
         return 2
     }
 
-    override fun getItem(position: Int): Fragment? {
-
+    override fun getItem(position: Int): Fragment {
         if (position == 0) {
             return OnBoardingOneFragment()
-        } else if (position == 1) {
+        } else {
             return OnBoardingTwoFragment()
-        }
-        else {
-            return null
         }
     }
 }

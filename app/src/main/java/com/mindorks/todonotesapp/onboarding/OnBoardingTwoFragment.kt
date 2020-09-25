@@ -1,5 +1,6 @@
 package com.mindorks.todonotesapp.onboarding
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,11 +10,18 @@ import android.widget.TextView
 import com.mindorks.todonotesapp.R
 
 class OnBoardingTwoFragment : Fragment() {
-    lateinit var textViewNext : TextView
-    lateinit var textViewBack : TextView
+    lateinit var textViewDone: TextView
+    lateinit var textViewBack: TextView
+    lateinit var onOptionClick: OnOptionClick
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onOptionClick = context as OnOptionClick
+    }
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_on_boarding_two, container, false)
     }
@@ -24,7 +32,26 @@ class OnBoardingTwoFragment : Fragment() {
     }
 
     private fun bindViews(view: View) {
-        textViewNext = view.findViewById(R.id.textViewNext)
+
+        textViewDone = view.findViewById(R.id.textViewDone)
         textViewBack = view.findViewById(R.id.textViewBack)
+        clickListener()
+    }
+
+    private fun clickListener() {
+        textViewBack.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                onOptionClick.onOptionBack()
+            }
+        })
+        textViewDone.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                onOptionClick.onOptionDone()
+            }
+        })
+    }
+    interface OnOptionClick {
+        fun onOptionBack()
+        fun onOptionDone()
     }
 }
